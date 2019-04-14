@@ -3,7 +3,8 @@ package br.udesc.pinii.macro.view;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello World");
+        FrameSystem frameSystem = new FrameSystem();
+        frameSystem.setVisible(true);
     }
 
 }
