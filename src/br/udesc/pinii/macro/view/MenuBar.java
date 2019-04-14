@@ -1,5 +1,7 @@
 package br.udesc.pinii.macro.view;
 
+import br.udesc.pinii.macro.control.listeners.SelectFileListener;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -26,6 +28,7 @@ public class MenuBar extends JMenuBar {
     private void initalizeComponets() {
         this.file = new JMenu("Arquivo");
         this.newSimulation = new JMenuItem("Nova Simulação");
+        this.newSimulation.addActionListener(new SelectFileListener());
         this.exit = new JMenuItem("Sair");
 
         this.controls = new JMenu("Controles");
