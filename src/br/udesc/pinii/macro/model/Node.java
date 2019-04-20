@@ -3,14 +3,35 @@ package br.udesc.pinii.macro.model;
 public class Node {
 
     private String name; //nome do nodo
-    private int dist; //distancia deste nodo em relação ao nodo inicial
-    private Node prev; //nodo anterior
-    private boolean flag; //flag de acesso, não sei que porra é essa
+    //teste
+    private double dist;
+    private String prev;
 
-    public Node(String name, int dist, Node prev, boolean flag) {
+    public Node(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getDist() {
+        return dist;
+    }
+
+    public void setDist(double dist) {
         this.dist = dist;
+    }
+
+    public String getPrev() {
+        return prev;
+    }
+
+    public void setPrev(String prev) {
         this.prev = prev;
-        this.flag = flag;
     }
 }
