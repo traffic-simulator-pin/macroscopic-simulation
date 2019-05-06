@@ -1,30 +1,31 @@
 package br.udesc.pinii.macro.model;
 
-public class Edge{
+public class Edge {
 
     private String name;
     private Node source;
     private Node target;
-    private int constantA;
-    private int constantB;
+    private double constantA;
+    private double constantB;
     private int maxSpeed;
-    private double roadSize;
+    private double length;
     private double roadCapacity;
 
-    public Edge(String name, Node source, Node target, int constantA, int constantB, int maxSpeed, double roadSize, double roadCapacity) {
+    public Edge(String name, Node source, Node target, double constantA, double constantB, int maxSpeed, double roadSize, double roadCapacity) {
         this.name = name;
         this.source = source;
         this.target = target;
         this.constantA = constantA;
         this.constantB = constantB;
         this.maxSpeed = maxSpeed;
-        this.roadSize = roadSize;
+        this.length = roadSize;
         this.roadCapacity = roadCapacity;
     }
 
-    public Edge(Node n1, Node n2) {
-        this.source = n1;
-        this.target = n2;
+    public Edge(Node source, Node target, double length) {
+        this.source = source;
+        this.target = target;
+        this.length = length;
     }
 
     public String getName() {
@@ -43,27 +44,51 @@ public class Edge{
         return target;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setTarget(Node target) {
         this.target = target;
     }
 
-    public int getConstantA() {
+    public double getConstantA() {
         return constantA;
     }
 
-    public int getConstantB() {
+    public void setConstantA(int constantA) {
+        this.constantA = constantA;
+    }
+
+    public double getConstantB() {
         return constantB;
+    }
+
+    public void setConstantB(int constantB) {
+        this.constantB = constantB;
     }
 
     public int getMaxSpeed() {
         return maxSpeed;
     }
 
-    public double getRoadSize() {
-        return roadSize;
+    public void setMaxSpeed(int maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
     }
 
     public double getRoadCapacity() {
         return roadCapacity;
+    }
+
+    public void setRoadCapacity(double roadCapacity) {
+        this.roadCapacity = roadCapacity;
     }
 }

@@ -1,37 +1,70 @@
 package br.udesc.pinii.macro.model;
 
-public class Node {
+import java.util.ArrayList;
+import java.util.List;
 
-    private String name; //nome do nodo
-    //teste
-    private double dist;
-    private String prev;
+public class Node implements Comparable<Node> {
+
+    private String name;
+    private List<Edge> edges;
+    private boolean visited;
+    private Node previosNode;
+    private double minDistance = Double.MAX_VALUE;
 
     public Node(String name) {
         this.name = name;
+        this.edges = new ArrayList<>();
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void addNeighbour(Edge edge) {
+        this.edges.add(edge);
     }
 
-    public double getDist() {
-        return dist;
+    public List<Edge> getEdges() {
+        return edges;
     }
 
-    public void setDist(double dist) {
-        this.dist = dist;
+    public void setEdges(List<Edge> edges) {
+        this.edges = edges;
     }
 
-    public String getPrev() {
-        return prev;
+    public boolean isVisited() {
+        return visited;
     }
 
-    public void setPrev(String prev) {
-        this.prev = prev;
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
+
+    public Node getPreviosNode() {
+        return previosNode;
+    }
+
+    public void setPreviosNode(Node previosNode) {
+        this.previosNode = previosNode;
+    }
+
+    public double getMinDistance() {
+        return minDistance;
+    }
+
+    public void setMinDistance(double minDistance) {
+        this.minDistance = minDistance;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public int compareTo(Node node) {
+        return Double.compare(this.minDistance, node.minDistance);
+    }
+
+
 }

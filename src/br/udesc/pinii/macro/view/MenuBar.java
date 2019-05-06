@@ -1,9 +1,12 @@
 package br.udesc.pinii.macro.view;
 
-import br.udesc.pinii.macro.control.listeners.SelectFileListener;
+import br.udesc.pinii.macro.control.SimulationController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 public class MenuBar extends JMenuBar {
 
@@ -19,16 +22,29 @@ public class MenuBar extends JMenuBar {
     private JMenu tools;
     private JMenuItem options;
 
+    private SimulationController simulationController;
+    private FileChooser fileChooser;
+
     public MenuBar() {
         this.setPreferredSize(new Dimension(30, 30));
         this.initalizeComponets();
         this.addComponets();
+        this.simulationController = SimulationController.getInstance();
     }
 
     private void initalizeComponets() {
         this.file = new JMenu("Arquivo");
         this.newSimulation = new JMenuItem("Nova Simulação");
-        this.newSimulation.addActionListener(new SelectFileListener());
+        this.newSimulation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    fileChooser = new FileChooser(simulationController);
+                } catch (FileNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         this.exit = new JMenuItem("Sair");
 
         this.controls = new JMenu("Controles");
