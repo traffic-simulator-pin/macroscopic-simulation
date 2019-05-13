@@ -2,6 +2,7 @@ package br.udesc.pinii.macro.control;
 
 import br.udesc.pinii.macro.model.Edge;
 import br.udesc.pinii.macro.model.Node;
+import br.udesc.pinii.macro.view.GraphPanel;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
@@ -45,6 +46,8 @@ public class SimulationController implements ISimulationController {
                 if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
                     this.nodes.add(new Node(eElement.getAttribute("name")));
+                    this.nodes.get(temp).setX(Integer.parseInt(eElement.getAttribute("x")));
+                    this.nodes.get(temp).setY(Integer.parseInt(eElement.getAttribute("y")));
                 }
             }
 
@@ -55,14 +58,11 @@ public class SimulationController implements ISimulationController {
                 org.w3c.dom.Node edgeNode = edgeList.item(temp);
                 if (edgeNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                     Element eElement = (Element) edgeNode;
-//                    System.out.print("Source: " + this.nodes.get(Integer.parseInt(eElement.getAttribute("source")) - 1).getName());
-//                    System.out.print("-");
-//                    System.out.println("Target: " + this.nodes.get(Integer.parseInt(eElement.getAttribute("target")) - 1).getName());
-
                     this.nodes.get(Integer.parseInt(eElement.getAttribute("source")) - 1).addNeighbour(new Edge(eElement.getAttribute("name"), this.nodes.get(Integer.parseInt(eElement.getAttribute("source")) - 1), this.nodes.get(Integer.parseInt(eElement.getAttribute("target")) - 1), Double.parseDouble(eElement.getAttribute("constantA")), Double.parseDouble(eElement.getAttribute("constantB")), Integer.parseInt(eElement.getAttribute("maxSpeed")), Double.parseDouble(eElement.getAttribute("length")), Double.parseDouble(eElement.getAttribute("capacity"))));
-                    //System.out.println(this.nodes.get(Integer.parseInt(eElement.getAttribute("source")) - 1).getEdges().size());
                 }
             }
+            GraphPanel graphPanel = new GraphPanel(nodes);
+            graphPanel.setVisible(true);
             System.out.println(this.nodes.toString());
             System.out.println(this.dijkstra(this.nodes.get(0), this.nodes.get(20)));
         } catch (Exception e) {

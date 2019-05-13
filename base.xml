@@ -1,30 +1,30 @@
 <?xml version="1.0"?>
 <data>
 <nodes>
-  <node name="1"/>
-  <node name="2"/>
-  <node name="3"/>
-  <node name="4"/>
-  <node name="5"/>
-  <node name="6"/>
-  <node name="7"/>
-  <node name="8"/>
-  <node name="9"/>
-  <node name="10"/>
-  <node name="11"/>
-  <node name="12"/>
-  <node name="13"/>
-  <node name="14"/>
-  <node name="15"/>
-  <node name="16"/>
-  <node name="17"/>
-  <node name="18"/>
-  <node name="19"/>
-  <node name="20"/>
-  <node name="21"/>
-  <node name="22"/>
-  <node name="23"/>
-  <node name="24"/>
+  <node name="1" x="0" y="0"/>
+  <node name="2" x="0" y="1"/>
+  <node name="3" x="0" y="2"/>
+  <node name="4" x="0" y="3"/>
+  <node name="5" x="0" y="4"/>
+  <node name="6" x="0" y="5"/>
+  <node name="7" x="1" y="0"/>
+  <node name="8" x="1" y="1"/>
+  <node name="9" x="1" y="2"/>
+  <node name="10" x="1" y="3"/>
+  <node name="11" x="1" y="4"/>
+  <node name="12" x="1" y="5"/>
+  <node name="13" x="2" y="0"/>
+  <node name="14" x="2" y="1"/>
+  <node name="15" x="2" y="2"/>
+  <node name="16" x="2" y="3"/>
+  <node name="17" x="2" y="4"/>
+  <node name="18" x="2" y="5"/>
+  <node name="19" x="3" y="0"/>
+  <node name="20" x="3" y="1"/>
+  <node name="21" x="3" y="2"/>
+  <node name="22" x="3" y="3"/>  
+  <node name="23" x="3" y="4"/>
+  <node name="24" x="3" y="5"/>
 </nodes>
 <edges>
   <edge name="1-2" source="1" target="2" type="a" length="6" capacity="4" maxSpeed="80" constantA="0.15" constantB="25900.20064"/>
