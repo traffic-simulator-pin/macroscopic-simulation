@@ -1,14 +1,15 @@
 package br.udesc.pinii.macro.control;
 
+import br.udesc.pinii.macro.control.observer.Observer;
 import br.udesc.pinii.macro.model.Edge;
 import br.udesc.pinii.macro.model.Node;
 import br.udesc.pinii.macro.view.GraphPanel;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +21,8 @@ public class SimulationController implements ISimulationController {
     private static SimulationController inscante;
 
     private List<Node> nodes;
+    private List<Observer> observers;
+    private Double[][] od;
 
     public static SimulationController getInstance() {
         if (inscante == null)
@@ -30,6 +33,7 @@ public class SimulationController implements ISimulationController {
 
     private SimulationController() {
         this.nodes = new ArrayList<>();
+        this.observers = new ArrayList<>();
     }
 
 
@@ -61,10 +65,29 @@ public class SimulationController implements ISimulationController {
                     this.nodes.get(Integer.parseInt(eElement.getAttribute("source")) - 1).addNeighbour(new Edge(eElement.getAttribute("name"), this.nodes.get(Integer.parseInt(eElement.getAttribute("source")) - 1), this.nodes.get(Integer.parseInt(eElement.getAttribute("target")) - 1), Double.parseDouble(eElement.getAttribute("constantA")), Double.parseDouble(eElement.getAttribute("constantB")), Integer.parseInt(eElement.getAttribute("maxSpeed")), Double.parseDouble(eElement.getAttribute("length")), Double.parseDouble(eElement.getAttribute("capacity"))));
                 }
             }
-            GraphPanel graphPanel = new GraphPanel(nodes);
-            graphPanel.setVisible(true);
-            System.out.println(this.nodes.toString());
-            System.out.println(this.dijkstra(this.nodes.get(0), this.nodes.get(20)));
+
+            this.od = new Double[nodes.size()][nodes.size()];
+
+            NodeList od = doc.getElementsByTagName("connection");
+
+            for (int temp = 0; temp < od.getLength(); temp++) {
+                org.w3c.dom.Node edgeNode = od.item(temp);
+                if (edgeNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+                    Element eElement = (Element) edgeNode;
+                    this.od[Integer.parseInt(eElement.getAttribute("source")) - 1][Integer.parseInt(eElement.getAttribute("target")) - 1] = Double.parseDouble(eElement.getAttribute("flow"));
+                }
+            }
+
+            for (int l = 0; l < this.od.length; l++) {
+                for (int c = 0; c < this.od[0].length; c++) {
+                    System.out.print(this.od[l][c] + " ");
+                }
+                System.out.println(" ");
+            }
+
+            notifyShowGraph();
+//            System.out.println(this.nodes.toString());
+//            System.out.println(this.dijkstra(this.nodes.get(0), this.nodes.get(20)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,5 +179,17 @@ public class SimulationController implements ISimulationController {
     @Override
     public void pathToStr() {
 
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        this.observers.add(observer);
+    }
+
+    @Override
+    public void notifyShowGraph() {
+        for (Observer observer : observers) {
+            observer.showGraph(nodes);
+        }
     }
 }

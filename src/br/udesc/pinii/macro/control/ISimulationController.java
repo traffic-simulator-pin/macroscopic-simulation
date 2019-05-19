@@ -1,5 +1,6 @@
 package br.udesc.pinii.macro.control;
 
+import br.udesc.pinii.macro.control.observer.Observer;
 import br.udesc.pinii.macro.model.Node;
 
 import java.io.File;
@@ -31,6 +32,10 @@ public interface ISimulationController {
     void printPath();
 
     void pathToStr();
+
+    void addObserver(Observer observer);
+
+    void notifyShowGraph();
 
 
 }
