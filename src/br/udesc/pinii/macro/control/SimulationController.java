@@ -80,9 +80,9 @@ public class SimulationController implements ISimulationController {
 
             for (int l = 0; l < this.od.length; l++) {
                 for (int c = 0; c < this.od[0].length; c++) {
-                    System.out.print(this.od[l][c] + " ");
+//                    System.out.print(this.od[l][c] + " ");
                 }
-                System.out.println(" ");
+//                System.out.println(" ");
             }
 
             notifyShowGraph();
