@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<data>
+<nodes>
+  <node name="1" x="0" y="0"/>
+  <node name="2" x="0" y="1"/>
+  <node name="3" x="0" y="2"/>
+  <node name="4" x="0" y="3"/>
+  <node name="5" x="0" y="4"/>
+  <node name="6" x="0" y="5"/>
+  <node name="7" x="0" y="6"/>
+</nodes>
+<edges>
+  <edge name="1-2" source="1" target="2" type="a" length="6" capacity="4" maxSpeed="80" constantA="0.15" constantB="25900.20064"/>
+  <edge name="2-3" source="2" target="3" type="a" length="4" capacity="4" maxSpeed="80" constantA="0.15" constantB="23403.47319"/>
+  <edge name="3-4" source="3" target="4" type="a" length="6" capacity="4" maxSpeed="80" constantA="0.15" constantB="25900.20064"/>
+  <edge name="4-5" source="4" target="5" type="a" length="6" capacity="4" maxSpeed="80" constantA="0.15" constantB="25900.20064"/>
+  <edge name="3-7" source="3" target="7" type="a" length="6" capacity="4" maxSpeed="80" constantA="0.15" constantB="25900.20064"/>
+  <edge name="5-6" source="5" target="6" type="a" length="6" capacity="4" maxSpeed="80" constantA="0.15" constantB="25900.20064"/>
+  <edge name="6-7" source="6" target="7" type="a" length="6" capacity="4" maxSpeed="80" constantA="0.15" constantB="25900.20064"/>
+</edges>
+<connections>
+  <connection name="1-1" source="1" target="1" flow="0.0"/>
+</connections> 
+</data>
+
