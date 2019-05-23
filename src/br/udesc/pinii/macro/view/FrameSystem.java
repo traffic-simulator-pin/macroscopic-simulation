@@ -4,58 +4,61 @@ import br.udesc.pinii.macro.control.ISimulationController;
 import br.udesc.pinii.macro.control.SimulationController;
 import br.udesc.pinii.macro.control.observer.Observer;
 import br.udesc.pinii.macro.model.Node;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
-
-import static javax.swing.SwingConstants.CENTER;
 
 public class FrameSystem extends JFrame implements Observer {
 
-    private JDesktopPane desktopPane;
     private Container container;
 
     private JMenuBar menuBar;
     private GraphPanel graphPanel;
     private ISimulationController simulationController;
 
-
     public FrameSystem() {
-        super.setTitle("Simulação Macroscópica");
-        super.setSize(new Dimension(900, 600));
-        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.simulationController = SimulationController.getInstance();
-        this.simulationController.addObserver(this);
-        this.initializeComponents();
-        this.addComponents();
-        this.addMenu();
+        setTitle("Simulação Macroscópica");
+        setSize(new Dimension(900, 600));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        simulationController = SimulationController.getInstance();
+        simulationController.addObserver(this);
+        initializeComponents();
+        addComponents();
     }
 
     private void initializeComponents() {
-        this.desktopPane = new JDesktopPane();
-        this.container = super.getContentPane();
+        container = super.getContentPane();
+        container.setLayout(new BorderLayout());
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == 117) {
+                    doStep();
+                }
+            }
+        });
     }
 
     private void addComponents() {
-//        this.container.add(desktopPane, CENTER);
-        setContentPane(desktopPane);
-
+        setContentPane(container);
+        addMenu();
     }
 
     private void addMenu() {
-        menuBar = new MenuBar();
-        super.setJMenuBar(menuBar);
-
-    }
-
-    private void addInternalFrame(JInternalFrame frame) {
-        desktopPane.add(frame);
+        menuBar = new MenuBar(this);
+        setJMenuBar(menuBar);
     }
 
     @Override
     public void showGraph(List<Node> nodeList) {
-        this.graphPanel = new GraphPanel(nodeList);
-        this.graphPanel.setVisible(true);
+        graphPanel = new GraphPanel(nodeList);
+        container.add(graphPanel, BorderLayout.CENTER);
+        container.doLayout();
+    }
+
+    public void doStep() {
+        graphPanel.doStep();
     }
 }

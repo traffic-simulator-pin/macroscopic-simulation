@@ -108,6 +108,7 @@ public class SimulationController implements ISimulationController {
                     System.out.println("Carros: "+edge.getSource()+"-"+edge.getTarget()+" "+edge.getVehiclesCount());
 //
                 }
+                System.out.println(" ");
             }
 
 //            System.out.println(this.nodes.toString());

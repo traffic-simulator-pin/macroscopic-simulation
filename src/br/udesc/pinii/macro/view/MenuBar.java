@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 
 public class MenuBar extends JMenuBar {
 
+    private final FrameSystem frame;
+    
     private JMenu file;
     private JMenuItem newSimulation;
     private JMenuItem exit;
@@ -25,7 +27,8 @@ public class MenuBar extends JMenuBar {
     private SimulationController simulationController;
     private FileChooser fileChooser;
 
-    public MenuBar() {
+    public MenuBar(FrameSystem frame) {
+        this.frame = frame;
         this.setPreferredSize(new Dimension(30, 30));
         this.initalizeComponets();
         this.addComponets();
@@ -52,6 +55,9 @@ public class MenuBar extends JMenuBar {
         this.pause.setIcon(new ImageIcon("images/pause.png"));
         this.play = new JMenuItem("Continuar");
         this.play.setIcon(new ImageIcon("images/play.png"));
+        this.play.addActionListener((ActionEvent arg0) -> {
+            doPlay();
+        });
         this.stop = new JMenuItem("Parar");
         this.stop.setIcon(new ImageIcon("images/stop.png"));
 
@@ -73,5 +79,9 @@ public class MenuBar extends JMenuBar {
         this.tools.add(options);
         super.add(tools);
 
+    }
+    
+    private void doPlay(){
+        frame.doStep();
     }
 }
