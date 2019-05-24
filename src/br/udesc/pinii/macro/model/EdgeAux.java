@@ -1,11 +1,11 @@
 package br.udesc.pinii.macro.model;
 
-public class RouteEntry {
+public class EdgeAux {
 
     private Edge edge;
     private double cost;
 
-    public RouteEntry(Edge edge, double cost) {
+    public EdgeAux(Edge edge, double cost) {
         this.edge = edge;
         this.cost = cost;
     }
@@ -22,7 +22,5 @@ public class RouteEntry {
         return cost;
     }
 
-    public void setCost(float cost) {
-        this.cost = cost;
-    }
+
 }

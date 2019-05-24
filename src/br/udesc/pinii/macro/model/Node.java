@@ -1,74 +1,36 @@
 package br.udesc.pinii.macro.model;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class Node implements Comparable<Node> {
+public class Node {
 
-    private String name;
-    private List<Edge> edges;
-    private Node previosNode;
-    private int x;
-    private int y;
-    private double minDistance = Double.MAX_VALUE;
+    private final String id;
+    private List<Edge> inEdges;
+    private List<Edge> outEdges;
 
-    public Node(String name) {
-        this.name = name;
-        this.edges = new ArrayList<>();
-    }
+    public Node(String id) {
+        this.id = id;
 
-    public String getName() {
-        return name;
-    }
-
-    public void addNeighbour(Edge edge) {
-        this.edges.add(edge);
-    }
-
-    public List<Edge> getEdges() {
-        return edges;
-    }
-
-    public Node getPreviosNode() {
-        return previosNode;
-    }
-
-    public void setPreviosNode(Node previosNode) {
-        this.previosNode = previosNode;
-    }
-
-    public double getMinDistance() {
-        return minDistance;
-    }
-
-    public void setMinDistance(double minDistance) {
-        this.minDistance = minDistance;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+        this.inEdges = new LinkedList<>();
+        this.outEdges = new LinkedList<>();
     }
 
     @Override
     public String toString() {
-        return name;
+        return id;
     }
 
-    @Override
-    public int compareTo(Node node) {
-        return Double.compare(this.minDistance, node.minDistance);
+    public void addInEdge(Edge edge) {
+        this.inEdges.add(edge);
+    }
+
+    public void addOutEdge(Edge edge) {
+        this.outEdges.add(edge);
+    }
+
+    public List<Edge> getOutEdges() {
+        return outEdges;
     }
 
 

@@ -32,7 +32,7 @@ public class MenuBar extends JMenuBar {
         this.setPreferredSize(new Dimension(30, 30));
         this.initalizeComponets();
         this.addComponets();
-        this.simulationController = SimulationController.getInstance();
+//        this.simulationController = SimulationController.getInstance();
     }
 
     private void initalizeComponets() {

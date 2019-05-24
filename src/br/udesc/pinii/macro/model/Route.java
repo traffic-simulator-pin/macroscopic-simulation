@@ -4,44 +4,23 @@ import java.util.List;
 
 public class Route {
 
-    private List<Node> path;
+    private List<Edge> path;
     private float cost;
     private String name;
 
-    public Route(List<Node> path, float cost) {
+
+    public Route(List<Edge> path, float cost) {
         this.path = path;
         this.cost = cost;
-        for (Node node : path) {
-            for (Edge edge : node.getEdges()) {
-                this.name += edge.getTarget().toString();
-
-            }
+        this.name = path.get(0).getSource().toString();
+        for (Edge e : path) {
+            this.name += e.getTarget().toString();
         }
     }
 
-
-    public List<Node> getPath() {
+    public List<Edge> getPath() {
         return path;
     }
 
-    public void setPath(List<Node> path) {
-        this.path = path;
-    }
-
-    public float getCost() {
-        return cost;
-    }
-
-    public void setCost(float cost) {
-        this.cost = cost;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
 }
+

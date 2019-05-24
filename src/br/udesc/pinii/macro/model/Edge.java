@@ -1,80 +1,67 @@
 package br.udesc.pinii.macro.model;
 
-public class Edge {
+import br.udesc.pinii.macro.util.Params;
 
-    private String name;
+
+public class Edge implements Comparable<Edge> {
+
+    private String id;
+    private boolean undirected;
     private Node source;
     private Node target;
-    private double constantA;
-    private double constantB;
-    private int maxSpeed;
-    private double length;
-    private double roadCapacity;
+    private float capacity;
     private float freeFlowCost;
+    private float constantA;
+    private float constantB;
     private int totalFlow;
     private int vehiclesCount;
     private float msaFlow;
     private double cost;
 
-    public Edge(String name, Node source, Node target, double constantA, double constantB, int maxSpeed, double roadSize, double roadCapacity) {
-        this.name = name;
+
+    public Edge() {
+
+    }
+
+    public Edge(String id, Node source, Node target, float capacity, float length, boolean directed,
+                float freeflow, float constantA, float constantB) {
+        this.id = id;
+        this.undirected = !directed;
+
         this.source = source;
+        this.source.addOutEdge(this);
         this.target = target;
-        this.constantA = constantA;
-        this.constantB = constantB;
-        this.maxSpeed = maxSpeed;
-        this.length = roadSize;
-        this.roadCapacity = roadCapacity;
-        this.cost = roadCapacity / maxSpeed * 60;
+        this.target.addInEdge(this);
+
+        if (this.undirected) {
+            this.source.addInEdge(this);
+            this.target.addOutEdge(this);
+        }
+
+        this.vehiclesCount = 0;
+
         this.totalFlow = 0;
         this.msaFlow = 0;
-    }
 
-    public Edge(String name, Node source, Node target, double constantA, double constantB, int maxSpeed, double length, double roadCapacity, float freeFlowCost, int totalFlow, int vehiclesCount, double cost) {
-        this.name = name;
-        this.source = source;
-        this.target = target;
+        this.capacity = capacity;
+        this.cost = freeflow;
+        this.freeFlowCost = length/freeflow;
         this.constantA = constantA;
         this.constantB = constantB;
-        this.maxSpeed = maxSpeed;
-        this.length = length;
-        this.roadCapacity = roadCapacity;
-        this.freeFlowCost = freeFlowCost;
-        this.totalFlow = totalFlow;
-        this.vehiclesCount = vehiclesCount;
-        this.cost = cost;
-        this.totalFlow = 0;
-        this.msaFlow = 0;
     }
 
-    public Edge(Node source, Node target, double length) {
-        this.source = source;
-        this.target = target;
-        this.length = length;
+
+    public void updateCost() {
+        this.cost = this.getFreeFlowCost() * (1 + this.getConstantA() * Math.pow(this.getVehiclesCount() / this.getCapacity(), getConstantB()));
     }
 
-    public int getVehiclesCount() {
-        return vehiclesCount;
+    public float getAcumulatedCost() {
+        return (float) (this.cost = this.getFreeFlowCost() * (1 + this.getConstantA() * Math.pow(this.getTotalFlow() / this.getCapacity(), getConstantB())));
     }
 
-    public float getMsaFlow() {
-        return msaFlow;
-    }
-
-    public Node getSource() {
-        return source;
-    }
-
-    public Node getTarget() {
-        return target;
-    }
-
-    public double getLength() {
-        return length;
-    }
-
-    public void afterEpisode() {
-        this.updateMSAFlow();
+    public void incVehiclesHere() {
+        this.vehiclesCount++;
+        this.totalFlow++;
     }
 
     public void clearVehiclesHere() {
@@ -86,19 +73,70 @@ public class Edge {
     }
 
     public void updateMSAFlow() {
-        this.msaFlow = (1 - 0.5f) * this.msaFlow + 0.5f * (this.totalFlow);
+        this.msaFlow = (1 - Params.PHI_MSA) * this.msaFlow + Params.PHI_MSA * (this.totalFlow);
     }
 
-    public void updateCost() {
-        this.msaFlow = (1 - 0.5f) * this.msaFlow + 0.5f * (this.totalFlow);
+    public int getTotalFlow() {
+        return totalFlow;
     }
 
-    public void incVehiclesHere() {
-        this.vehiclesCount++;
-        this.totalFlow++;
+    public float msaCost() {
+        return (float) (this.cost = this.getFreeFlowCost() * (1 + this.getConstantA() * Math.pow(this.getMsaFlow() / this.getCapacity(), getConstantB())));
     }
 
-    public double msaCost() {
-        return this.freeFlowCost * (1 + this.constantA * (float) Math.pow(this.msaFlow / this.roadCapacity, this.constantB));
+    public void afterEpisode() {
+        this.updateMSAFlow();
+    }
+
+    public float getMsaFlow() {
+        return msaFlow;
+    }
+
+    public float getConstantA() {
+        return constantA;
+    }
+
+    public float getConstantB() {
+        return constantB;
+    }
+
+    public Node getSource() {
+        return source;
+    }
+
+    public Node getTarget() {
+        return target;
+    }
+
+    public float getCapacity() {
+        return capacity;
+    }
+
+    public float getFreeFlowCost() {
+        return freeFlowCost;
+    }
+
+
+    public double getCost() {
+        return cost;
+    }
+
+
+    public int getVehiclesCount() {
+        return vehiclesCount;
+    }
+
+    @Override
+    public String toString() {
+        return source + ((undirected) ? " -- " : " -- ") + target;
+    }
+
+    @Override
+    public int compareTo(Edge o) {
+        try {
+            return Float.compare(new Float(this.id), new Float(o.id));
+        } catch (Exception e) {
+            return this.id.compareTo(o.id);
+        }
     }
 }

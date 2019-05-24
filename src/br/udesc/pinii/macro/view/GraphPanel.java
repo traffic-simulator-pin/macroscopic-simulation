@@ -42,7 +42,7 @@ public class GraphPanel extends JPanel {
 
         ControllerXML c = new ControllerXML(nodeList);
 
-        c.gerarXML("grafo.xml");
+//        c.gerarXML("grafo.xml");
 
         graph = null;
         try {
@@ -63,7 +63,7 @@ public class GraphPanel extends JPanel {
         ColorAction text = new ColorAction("graph.nodes", VisualItem.TEXTCOLOR, ColorLib.gray(0));
 
 //        palette2 = new int[]{ColorLib.rgb(200, 200, 200), ColorLib.rgb(0, 140, 0), ColorLib.rgb(220, 0, 0), ColorLib.rgb(0, 0, 200)};
-        setColors();
+//        setColors();
         DataColorAction edges = new DataColorAction("graph.edges", "id", 0, VisualItem.STROKECOLOR, palette2);
         //ColorAction edges = new ColorAction("graph.edges", VisualItem.STROKECOLOR, ColorLib.gray(200));
         //ColorAction edges2 = new ColorAction("graph.edges", new  BooleanLiteral(false), VisualItem.STROKECOLOR, ColorLib.rgb(200, 0, 0));
@@ -99,20 +99,20 @@ public class GraphPanel extends JPanel {
 
     }
 
-    public void setColors() {
-        int size = 0;
-        for (int i = 1; i <= nodeList.size(); i++) {
-            List<Edge> arestas = nodeList.get(i - 1).getEdges();
-            for (int j = 1; j <= arestas.size(); j++) {
-                size++;
-            }
-        }
-        palette2 = new int[size];
-        //System.out.println("size + " + size);
-        for (int i = 0; i < size; i++) {
-            palette2[i] = ColorLib.rgb(0, 0, 0);
-        }
-    }
+//    public void setColors() {
+//        int size = 0;
+//        for (int i = 1; i <= nodeList.size(); i++) {
+//            List<Edge> arestas = nodeList.get(i - 1).getEdges();
+//            for (int j = 1; j <= arestas.size(); j++) {
+//                size++;
+//            }
+//        }
+//        palette2 = new int[size];
+//        //System.out.println("size + " + size);
+//        for (int i = 0; i < size; i++) {
+//            palette2[i] = ColorLib.rgb(0, 0, 0);
+//        }
+//    }
 
     public void doStep() {
         palette2[test] = ColorLib.rgb(200, 0, 0);
