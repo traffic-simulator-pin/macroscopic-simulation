@@ -64,9 +64,9 @@ public class FileChooser extends JFileChooser {
                         e.getAttribute("name"),
                         V.get(e.getAttribute("source")),
                         V.get(e.getAttribute("target")),
-                        stringToFloat(e.getAttribute("capacity")) * Params.CAPACITY_FACTOR,
+                        stringToFloat(e.getAttribute("length")) * Params.CAPACITY_FACTOR,
                         stringToFloat(e.getAttribute("length")),
-                        isDirected(e.getAttribute("type")),
+                        isDirected("false"),
                         stringToFloat(e.getAttribute("maxSpeed")),
                         stringToFloat(e.getAttribute("constantA")),
                         stringToFloat(e.getAttribute("constantB"))
@@ -99,7 +99,6 @@ public class FileChooser extends JFileChooser {
                 Node destination = G.getNodes(e.getAttribute("target"));
 
 
-                System.out.println(e.getAttribute("flow"));
                 int size = (int) (Integer.parseInt(e.getAttribute("trips")) * demand_factor);
                 for (int d = size; d > 0; d--) {
                     Object driver = clazz.getConstructor(clazz.getConstructors()[0].getParameterTypes()).newInstance(++countD, origin, destination, G);

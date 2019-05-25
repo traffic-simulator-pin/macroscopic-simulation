@@ -57,7 +57,6 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
             d.beforeEpisode();
         }
         while (Params.STEP < Params.NUM_STEPS) {
-            printLinksFlow();
             if (!this.step()) {
                 break;
             }
@@ -76,7 +75,6 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
     private boolean step() {
         boolean finished = true;
         List<MSA> driversToProcess = new LinkedList<>();
-
         for (T d : this.drivers) {
             if (!d.hasArrived() && d.mustBeProcessed()) {
                 finished = false;
@@ -88,7 +86,6 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
         }
 
         Params.STEP++;
-
         for (MSA driver : driversToProcess) {
             this.cservice.submit(driver);
         }
@@ -110,6 +107,7 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
                 e.clearTotalFlow();
             }
         }
+
         for (MSA d : driversToProcess) {
             if (!d.hasArrived()) {
                 d.getCurrent_road().incVehiclesHere();
@@ -120,6 +118,7 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
         for (Edge e : this.graph.getEdges()) {
             e.updateCost();
         }
+
         printLinksFlow();
 
         for (MSA driver : driversToProcess) {

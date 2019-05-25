@@ -44,8 +44,8 @@ public class Edge implements Comparable<Edge> {
         this.msaFlow = 0;
 
         this.capacity = capacity;
-        this.cost = freeflow;
-        this.freeFlowCost = length/freeflow;
+        this.cost = length;
+        this.freeFlowCost = freeflow;
         this.constantA = constantA;
         this.constantB = constantB;
     }
