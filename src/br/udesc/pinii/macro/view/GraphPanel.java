@@ -78,7 +78,7 @@ public class GraphPanel extends JPanel {
 
         //Container para adição no JFrame
         Display display = new Display(visual);
-        display.setSize(1280, 700);
+        display.setSize(1920, 1080);
         //Controles de movimento e zoom
         display.addControlListener(new DragControl());
         display.addControlListener(new PanControl());
@@ -96,23 +96,24 @@ public class GraphPanel extends JPanel {
     }
 
     public void setColors() {
-        int size = 0;
-        for (int i = 1; i <= appGraph.getNodes().size(); i++) {
-            List<Edge> arestas = appGraph.getNodes().get(i - 1).getOutEdges();
-            for (int j = 1; j <= arestas.size(); j++) {
-                size++;
-            }
-        }
+        int size = appGraph.getEdges().size();
         palette2 = new int[size];
-        //System.out.println("size + " + size);
+        System.out.println("size : " + size);
         for (int i = 0; i < size; i++) {
             palette2[i] = ColorLib.rgb(0, 0, 0);
         }
     }
 
-    public void doStep() {
-        palette2[test] = ColorLib.rgb(200, 0, 0);
-        test++;
+    public void refreshEdges() {
+        for (int i = 0; i < appGraph.getEdges().size(); i++) {
+            if (appGraph.getEdges().get(i).getVehiclesCount() > 1) {
+                palette2[i] = ColorLib.rgb(200, 0, 0);
+            } else {
+                palette2[i] = ColorLib.rgb(0, 0, 0);
+            }
+        }
+        //palette2[test] = ColorLib.rgb(200, 0, 0);
+        //test++;
         visual.run("repaint");
     }
 

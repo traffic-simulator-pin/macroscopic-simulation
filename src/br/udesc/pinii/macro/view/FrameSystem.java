@@ -11,7 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public class FrameSystem extends JFrame implements Observer {
+public class FrameSystem extends JFrame implements Observer{
 
     private Container container;
 
@@ -23,8 +23,6 @@ public class FrameSystem extends JFrame implements Observer {
         setTitle("Simulação Macroscópica");
         setSize(new Dimension(900, 600));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        simulationController = SimulationController.getInstance();
-//        simulationController.addObserver(this);
         initializeComponents();
         addComponents();
     }
@@ -36,7 +34,7 @@ public class FrameSystem extends JFrame implements Observer {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == 117) {
-                    doStep();
+                    refreshEdges();
                 }
             }
         });
@@ -52,13 +50,17 @@ public class FrameSystem extends JFrame implements Observer {
         setJMenuBar(menuBar);
     }
 
-    public void initGraph(Graph graph) {
+    public void initGraph(Graph graph, SimulationController simulationController) {
+        this.simulationController = simulationController;
+        simulationController.addObserver(this);
         graphPanel = new GraphPanel(graph);
         container.add(graphPanel, BorderLayout.CENTER);
         container.doLayout();
     }
 
-    public void doStep() {
-        graphPanel.doStep();
+    @Override
+    public void refreshEdges() {
+        graphPanel.refreshEdges();
     }
+    
 }

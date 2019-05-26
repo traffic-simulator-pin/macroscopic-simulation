@@ -18,6 +18,9 @@ public class Edge implements Comparable<Edge> {
     private float msaFlow;
     private double cost;
 
+    public String getId() {
+        return id;
+    }
 
     public Edge() {
 

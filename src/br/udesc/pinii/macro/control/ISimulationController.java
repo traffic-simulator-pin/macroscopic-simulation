@@ -11,6 +11,6 @@ public interface ISimulationController {
 
     void addObserver(Observer observer);
 
-    void notifyShowGraph();
+    void notifyRefreshEdges();
 
 }

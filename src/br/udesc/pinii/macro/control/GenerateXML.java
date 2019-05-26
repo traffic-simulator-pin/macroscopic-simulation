@@ -20,16 +20,16 @@ public class GenerateXML {
     }
 
     public static void gerarNodo(long userId, String name, String conj) {
-        arquivo.append("\n<node id=\"").append(userId).append("\">\n").
+        arquivo.append("\n<node id=\"").append(userId).append("\"> ").
                 append("<data key=\"name\">").append(name).
-                append("</data>\n<data key=\"conj\">").append(conj).
-                append("</data>\n</node>");
+                append("</data> <data key=\"conj\">").append(conj).
+                append("</data> </node>");
     }
 
-    public static void gerarAresta(int id, int idSource, int idTarget) {
-        arquivo.append("\n<edge source=\"").append(idSource).append("\" target=\"").append(idTarget).append("\">\n").
+    public static void gerarAresta(String id, String idSource, String idTarget) {
+        arquivo.append("\n<edge source=\"").append(idSource).append("\" target=\"").append(idTarget).append("\"> ").
                 append("<data key=\"id\">").append(id).
-                append("</data>\n</edge>\n");
+                append("</data> </edge> ");
     }
 
     public static void fecharArquivo() {

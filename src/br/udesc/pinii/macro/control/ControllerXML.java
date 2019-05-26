@@ -19,16 +19,11 @@ public class ControllerXML {
 
     public void gerarXML(String nomeArquivo) {
         GenerateXML.iniciarArquivo();
-        for (int i = 1; i <= graph.getNodes().size(); i++) {
-            GenerateXML.gerarNodo(Integer.parseInt(graph.getNodes().get(i - 1).toString()), "" + graph.getNodes().get(i - 1).toString(), "A");
+        for (int i = 0; i < graph.getNodes().size(); i++) {
+            GenerateXML.gerarNodo(Integer.parseInt(graph.getNodes().get(i).toString()), graph.getNodes().get(i).toString(), "A");
         }
-        int id = 0;
-        for (int i = 1; i <= graph.getNodes().size(); i++) {
-            List<Edge> arestas = graph.getNodes().get(i - 1).getOutEdges();
-            for (int j = 1; j <= arestas.size(); j++) {
-                GenerateXML.gerarAresta(id, Integer.parseInt(arestas.get(j - 1).getSource().toString()), Integer.parseInt(arestas.get(j - 1).getTarget().toString()));
-                id++;
-            }
+        for (int i = 0; i < graph.getEdges().size(); i++) {
+            GenerateXML.gerarAresta(graph.getEdges().get(i).getId(), graph.getEdges().get(i).getSource().toString(), graph.getEdges().get(i).getTarget().toString());
         }
         GenerateXML.fecharArquivo();
         GenerateXML.salvarXML(nomeArquivo);

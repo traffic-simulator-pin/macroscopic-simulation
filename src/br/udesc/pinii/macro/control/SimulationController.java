@@ -152,6 +152,7 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
             System.out.print(" quantidade: ");
             System.out.println(e.getVehiclesCount());
         }
+        notifyRefreshEdges();
     }
 
 
@@ -167,9 +168,9 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
     }
 
     @Override
-    public void notifyShowGraph() {
+    public void notifyRefreshEdges() {
         for (Observer observer : observers) {
-//            observer.showGraph(nodes);
+            observer.refreshEdges();
         }
     }
 }

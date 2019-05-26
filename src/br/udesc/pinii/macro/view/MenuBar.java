@@ -82,6 +82,6 @@ public class MenuBar extends JMenuBar {
     }
     
     private void doPlay(){
-        frame.doStep();
+        frame.refreshEdges();
     }
 }
