@@ -3,6 +3,7 @@ package br.udesc.pinii.macro.view;
 import br.udesc.pinii.macro.control.ISimulationController;
 import br.udesc.pinii.macro.control.SimulationController;
 import br.udesc.pinii.macro.control.observer.Observer;
+import br.udesc.pinii.macro.model.Graph;
 import br.udesc.pinii.macro.model.Node;
 import javax.swing.*;
 import java.awt.*;
@@ -51,9 +52,8 @@ public class FrameSystem extends JFrame implements Observer {
         setJMenuBar(menuBar);
     }
 
-    @Override
-    public void showGraph(List<Node> nodeList) {
-        graphPanel = new GraphPanel(nodeList);
+    public void initGraph(Graph graph) {
+        graphPanel = new GraphPanel(graph);
         container.add(graphPanel, BorderLayout.CENTER);
         container.doLayout();
     }

@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface Observer {
 
-    void showGraph(List<Node> nodeList);
 
 }

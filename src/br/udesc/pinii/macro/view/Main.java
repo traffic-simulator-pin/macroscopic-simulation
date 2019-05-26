@@ -18,13 +18,12 @@ public class Main {
         try {
             List<MSA> drivers = FileChooser.processODMatrix(graph, new File("files/base.xml"), 1.0f, MSA.class);
             SimulationController simulationController = new SimulationController(graph, drivers);
+            frameSystem.initGraph(graph);
             simulationController.start();
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-
         System.out.println("Sucesso ao ler xml");
     }
-
 
 }
