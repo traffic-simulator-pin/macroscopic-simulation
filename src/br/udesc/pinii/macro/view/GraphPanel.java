@@ -109,7 +109,7 @@ public class GraphPanel extends JPanel {
             if (appGraph.getEdges().get(i).getVehiclesCount() > 1500) {
                 palette2[i] = ColorLib.rgb(255, 255 - (appGraph.getEdges().get(i).getVehiclesCount() / 58), 0);
             } else {
-                palette2[i] = ColorLib.rgb(appGraph.getEdges().get(i).getVehiclesCount() / 5, 255, 0);
+                palette2[i] = ColorLib.rgb(appGraph.getEdges().get(i).getVehiclesCount() / 2, 255, 0);
             }
         }
         //palette2[test] = ColorLib.rgb(200, 0, 0);

@@ -3,6 +3,7 @@ package br.udesc.pinii.macro.view;
 import br.udesc.pinii.macro.control.SimulationController;
 import br.udesc.pinii.macro.model.Edge;
 import br.udesc.pinii.macro.model.Graph;
+import br.udesc.pinii.macro.model.MSA;
 import br.udesc.pinii.macro.model.Node;
 import br.udesc.pinii.macro.util.Params;
 import org.w3c.dom.Document;
@@ -53,7 +54,7 @@ public class FileChooser extends JFileChooser {
             V = new HashMap<>(list.getLength());
             for (int i = 0; i < list.getLength(); i++) {
                 Element e = (Element) list.item(i);
-                V.put(e.getAttribute("name"), new Node(e.getAttribute("name")));
+                V.put(e.getAttribute("id"), new Node(e.getAttribute("id")));
             }
 
             list = doc.getElementsByTagName("edge");
@@ -64,15 +65,25 @@ public class FileChooser extends JFileChooser {
                         e.getAttribute("name"),
                         V.get(e.getAttribute("source")),
                         V.get(e.getAttribute("target")),
-                        stringToFloat(e.getAttribute("length")) * Params.CAPACITY_FACTOR,
+                        stringToFloat(e.getAttribute("capacity")) * Params.CAPACITY_FACTOR,
                         stringToFloat(e.getAttribute("length")),
                         isDirected("false"),
-                        stringToFloat(e.getAttribute("maxSpeed")),
+                        stringToFloat(e.getAttribute("speed")),
+                        stringToFloat(e.getAttribute("constantA")),
+                        stringToFloat(e.getAttribute("constantB"))
+                ));
+                E.put(e.getAttribute("target") + e.getAttribute("source"), new Edge(
+                        e.getAttribute("target") + e.getAttribute("source"),
+                        V.get(e.getAttribute("target")),
+                        V.get(e.getAttribute("source")),
+                        stringToFloat(e.getAttribute("capacity")) * Params.CAPACITY_FACTOR,
+                        stringToFloat(e.getAttribute("length")),
+                        isDirected("false"),
+                        stringToFloat(e.getAttribute("speed")),
                         stringToFloat(e.getAttribute("constantA")),
                         stringToFloat(e.getAttribute("constantB"))
                 ));
             }
-
         } catch (IOException | NumberFormatException | ParserConfigurationException | SAXException e) {
             System.err.println("Error on reading XML file!");
         }
@@ -97,11 +108,13 @@ public class FileChooser extends JFileChooser {
                 Element e = (Element) list.item(i);
                 Node origin = G.getNodes(e.getAttribute("source"));
                 Node destination = G.getNodes(e.getAttribute("target"));
-
-
+                System.out.print(origin + "-");
+                System.out.println(destination);
                 int size = (int) (Integer.parseInt(e.getAttribute("trips")) * demand_factor);
                 for (int d = size; d > 0; d--) {
                     Object driver = clazz.getConstructor(clazz.getConstructors()[0].getParameterTypes()).newInstance(++countD, origin, destination, G);
+//                    Object driver = new MSA(++countD, origin, destination, G);
+                    drivers.add((T) driver);
                     drivers.add((T) driver);
                 }
             }

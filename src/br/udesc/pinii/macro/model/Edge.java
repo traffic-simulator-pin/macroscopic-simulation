@@ -37,6 +37,7 @@ public class Edge implements Comparable<Edge> {
         this.target.addInEdge(this);
 
         if (this.undirected) {
+
             this.source.addInEdge(this);
             this.target.addOutEdge(this);
         }

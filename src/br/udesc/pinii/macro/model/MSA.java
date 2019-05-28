@@ -23,6 +23,9 @@ public class MSA<T extends MSA> implements Callable<MSA> {
         if (source == target) {
             System.err.println("Erro ao rodar msa");
         }
+//        System.out.println(id);
+//        System.out.print(source+" ");
+//        System.out.println(target);
 
         this.id = id;
         this.source = source;
@@ -43,7 +46,7 @@ public class MSA<T extends MSA> implements Callable<MSA> {
         for (Edge e : this.graph.getEdges()) {
             edgesMap.put(e.toString(), new EdgeAux(e, e.msaCost()));
         }
-
+//        System.out.println(this.source + "-" + this.target);
         List<Edge> path = dijkstra.dijkstra(this.graph.getNodes(), edgesMap, this.source, this.target);
         route = new Route(path, dijkstra.calcCostPath(edgesMap, path));
     }
@@ -86,7 +89,7 @@ public class MSA<T extends MSA> implements Callable<MSA> {
         return cost;
     }
 
-        public void printRoute() {
+    public void printRoute() {
         if (traveledRoute.size() < 1) {
             System.out.println(">>>>>>>>>>>>> " + this.toString() + " ---- " + this.getTravelTime());
         }

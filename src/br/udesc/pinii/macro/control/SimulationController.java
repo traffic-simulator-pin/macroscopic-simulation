@@ -142,16 +142,16 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
         List<Edge> list = this.graph.getEdges();
         Collections.sort(list);
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("=================Camada================");
-        for (Edge e : list) {
-            System.out.print(e.getSource() + "-" + e.getTarget());
-            System.out.print(" quantidade: ");
-            System.out.println(e.getVehiclesCount());
-        }
+//        System.out.println("=================Camada================");
+//        for (Edge e : list) {
+//            System.out.print(e.getSource() + "-" + e.getTarget());
+//            System.out.print(" quantidade: ");
+//            System.out.println(e.getVehiclesCount());
+//        }
         notifyRefreshEdges();
     }
 
