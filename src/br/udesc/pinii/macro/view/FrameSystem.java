@@ -5,13 +5,14 @@ import br.udesc.pinii.macro.control.SimulationController;
 import br.udesc.pinii.macro.control.observer.Observer;
 import br.udesc.pinii.macro.model.Graph;
 import br.udesc.pinii.macro.model.Node;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public class FrameSystem extends JFrame implements Observer{
+public class FrameSystem extends JFrame implements Observer {
 
     private Container container;
 
@@ -19,17 +20,29 @@ public class FrameSystem extends JFrame implements Observer{
     private GraphPanel graphPanel;
     private ISimulationController simulationController;
 
-    public FrameSystem() {
+    private static FrameSystem instance;
+
+    public static FrameSystem getInstance() {
+        if (instance == null)
+            instance = new FrameSystem();
+
+        return instance;
+    }
+
+
+    private FrameSystem() {
         setTitle("Simulação Macroscópica");
         setSize(new Dimension(900, 600));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        simulationController = SimulationController.getInstance();
+        simulationController.addObserver(this);
         initializeComponents();
         addComponents();
     }
 
     private void initializeComponents() {
         container = super.getContentPane();
-        container.setLayout(new BorderLayout());
+        container.setLayout(new GridLayout(1, 1));
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -50,17 +63,15 @@ public class FrameSystem extends JFrame implements Observer{
         setJMenuBar(menuBar);
     }
 
-    public void initGraph(Graph graph, SimulationController simulationController) {
-        this.simulationController = simulationController;
-        simulationController.addObserver(this);
-        graphPanel = new GraphPanel(graph);
-        container.add(graphPanel, BorderLayout.CENTER);
-        container.doLayout();
-    }
-
     @Override
     public void refreshEdges() {
         graphPanel.refreshEdges();
     }
-    
+
+    public void initNewGraph(Graph graph) {
+        graphPanel = new GraphPanel(graph);
+        container.add(graphPanel);
+        container.doLayout();
+    }
+
 }

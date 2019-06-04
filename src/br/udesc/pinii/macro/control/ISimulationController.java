@@ -1,6 +1,7 @@
 package br.udesc.pinii.macro.control;
 
 import br.udesc.pinii.macro.control.observer.Observer;
+import br.udesc.pinii.macro.model.Graph;
 import br.udesc.pinii.macro.model.Node;
 
 import java.io.File;

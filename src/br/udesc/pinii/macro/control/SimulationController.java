@@ -4,8 +4,20 @@ import br.udesc.pinii.macro.control.observer.Observer;
 import br.udesc.pinii.macro.model.Edge;
 import br.udesc.pinii.macro.model.Graph;
 import br.udesc.pinii.macro.model.MSA;
+import br.udesc.pinii.macro.model.Node;
 import br.udesc.pinii.macro.util.Params;
+import br.udesc.pinii.macro.view.FrameSystem;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
@@ -17,21 +29,47 @@ import java.util.logging.Logger;
 public class SimulationController<T extends MSA> implements ISimulationController {
 
     private List<Observer> observers;
-    private final Graph graph;
-    private final List<T> drivers;
+    private Graph graph;
+    private List<T> drivers;
     private final ExecutorService eservice = Executors.newFixedThreadPool(Params.CORES);
     private final CompletionService<Object> cservice = new ExecutorCompletionService<>(eservice);
+    private File selectedFile;
+    private static SimulationController instance;
 
-    public SimulationController(Graph graph, List<T> drivers) {
+    public static SimulationController getInstance() {
+        if (instance == null)
+            instance = new SimulationController();
+
+        return instance;
+    }
+
+    private SimulationController() {
         this.observers = new ArrayList<>();
-        this.graph = graph;
+    }
+
+
+    public void setDrivers(List<T> drivers) {
         this.drivers = drivers;
+    }
+
+    public void setSelectedFile(File file) {
+        this.selectedFile = file;
+        this.graph = processGraph(file);
+        try {
+            this.drivers = processODMatrix(graph, file, 1.0f, MSA.class);
+            FrameSystem.getInstance().initNewGraph(graph);
+            //problema é aqui
+//            start();
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void start() {
         System.out.println("iniciou");
         this.reset();
-
+        notifyRefreshEdges();
         Params.EG_EPSILON = Params.EG_EPSILON_DEFAULT;
 
         while (Params.EPISODE < Params.NUM_EPISODES) {
@@ -118,7 +156,7 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
         for (Edge e : this.graph.getEdges()) {
             e.updateCost();
         }
-
+        System.out.println("opa");
         printLinksFlow();
 
         for (MSA driver : driversToProcess) {
@@ -138,6 +176,103 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
         return true;
     }
 
+    public Graph processGraph(File netFile) {
+        HashMap<String, Node> V = null;
+        HashMap<String, Edge> E = null;
+
+        try {
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(netFile);
+
+            NodeList list = doc.getElementsByTagName("node");
+            V = new HashMap<>(list.getLength());
+            for (int i = 0; i < list.getLength(); i++) {
+                Element e = (Element) list.item(i);
+                V.put(e.getAttribute("id"), new Node(e.getAttribute("id")));
+            }
+
+            list = doc.getElementsByTagName("edge");
+            E = new HashMap<>(list.getLength());
+            for (int i = 0; i < list.getLength(); i++) {
+                Element e = (Element) list.item(i);
+                E.put(e.getAttribute("name"), new Edge(
+                        e.getAttribute("name"),
+                        V.get(e.getAttribute("source")),
+                        V.get(e.getAttribute("target")),
+                        stringToFloat(e.getAttribute("capacity")) * Params.CAPACITY_FACTOR,
+                        stringToFloat(e.getAttribute("length")),
+                        isDirected("false"),
+                        stringToFloat(e.getAttribute("speed")),
+                        stringToFloat(e.getAttribute("constantA")),
+                        stringToFloat(e.getAttribute("constantB"))
+                ));
+                E.put(e.getAttribute("target") + e.getAttribute("source"), new Edge(
+                        e.getAttribute("target") + e.getAttribute("source"),
+                        V.get(e.getAttribute("target")),
+                        V.get(e.getAttribute("source")),
+                        stringToFloat(e.getAttribute("capacity")) * Params.CAPACITY_FACTOR,
+                        stringToFloat(e.getAttribute("length")),
+                        isDirected("false"),
+                        stringToFloat(e.getAttribute("speed")),
+                        stringToFloat(e.getAttribute("constantA")),
+                        stringToFloat(e.getAttribute("constantB"))
+                ));
+            }
+        } catch (IOException | NumberFormatException | ParserConfigurationException | SAXException e) {
+            System.err.println("Error on reading XML file!");
+        }
+        return new Graph(V, E);
+    }
+
+    public <T> List<T> processODMatrix(Graph G, File odFile, float demand_factor, Class<br.udesc.pinii.macro.model.MSA> clazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<T> drivers = new ArrayList<>();
+        System.out.println("Aguarde a criação da matriz od...");
+        try {
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(odFile);
+
+            NodeList list = doc.getElementsByTagName("od");
+
+            int countD = 0;
+
+            for (int i = 0; i < list.getLength(); i++) {
+                Element e = (Element) list.item(i);
+                Node origin = G.getNodes(e.getAttribute("source"));
+                Node destination = G.getNodes(e.getAttribute("target"));
+                System.out.print(origin + "-");
+                System.out.println(destination);
+                int size = (int) (Integer.parseInt(e.getAttribute("trips")) * demand_factor);
+                for (int d = size; d > 0; d--) {
+                    Object driver = clazz.getConstructor(clazz.getConstructors()[0].getParameterTypes()).newInstance(++countD, origin, destination, G);
+                    drivers.add((T) driver);
+                    drivers.add((T) driver);
+                }
+            }
+            Params.DEMAND_SIZE = countD;
+
+            System.out.println("sucesso ao gerar matriz OD");
+        } catch (IOException | NumberFormatException | ParserConfigurationException | SAXException e) {
+            System.err.println("Error on reading XML file!");
+        }
+        return drivers;
+    }
+
+    private static float stringToFloat(String value) {
+        if (value.equals("")) {
+            return 0f;
+        } else {
+            return Float.parseFloat(value);
+        }
+    }
+
+    private static boolean isDirected(String value) {
+        return value.equalsIgnoreCase("true");
+    }
+
     public void printLinksFlow() {
         List<Edge> list = this.graph.getEdges();
         Collections.sort(list);
@@ -146,12 +281,6 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        System.out.println("=================Camada================");
-//        for (Edge e : list) {
-//            System.out.print(e.getSource() + "-" + e.getTarget());
-//            System.out.print(" quantidade: ");
-//            System.out.println(e.getVehiclesCount());
-//        }
         notifyRefreshEdges();
     }
 
@@ -173,4 +302,6 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
             observer.refreshEdges();
         }
     }
+
+
 }

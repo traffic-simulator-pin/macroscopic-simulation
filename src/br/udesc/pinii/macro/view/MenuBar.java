@@ -25,14 +25,14 @@ public class MenuBar extends JMenuBar {
     private JMenuItem options;
 
     private SimulationController simulationController;
-    private FileChooser fileChooser;
+//    private FileChooser fileChooser;
 
     public MenuBar(FrameSystem frame) {
         this.frame = frame;
         this.setPreferredSize(new Dimension(30, 30));
         this.initalizeComponets();
         this.addComponets();
-//        this.simulationController = SimulationController.getInstance();
+        this.simulationController = SimulationController.getInstance();
     }
 
     private void initalizeComponets() {
@@ -42,7 +42,8 @@ public class MenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    fileChooser = new FileChooser(simulationController);
+                 FileChooser fileChooser = new FileChooser();
+                 fileChooser.setVisible(true);
                 } catch (FileNotFoundException ex) {
                     ex.printStackTrace();
                 }
@@ -82,6 +83,6 @@ public class MenuBar extends JMenuBar {
     }
     
     private void doPlay(){
-        frame.refreshEdges();
+        simulationController.start();
     }
 }

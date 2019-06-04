@@ -1,29 +1,19 @@
 package br.udesc.pinii.macro.view;
 
 import br.udesc.pinii.macro.control.SimulationController;
-import br.udesc.pinii.macro.model.Graph;
-import br.udesc.pinii.macro.model.MSA;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        FrameSystem frameSystem = new FrameSystem();
+
+        FrameSystem frameSystem = FrameSystem.getInstance();
         frameSystem.setVisible(true);
         frameSystem.setLocationRelativeTo(null);
-        Graph graph = FileChooser.processGraph(new File("files/base.xml"));
-        try {
-            List<MSA> drivers = FileChooser.processODMatrix(graph, new File("files/base.xml"), 1.0f, MSA.class);
-            SimulationController simulationController = new SimulationController(graph, drivers);
-            frameSystem.initGraph(graph, simulationController);
-            simulationController.start();
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Sucesso ao ler xml");
+        SimulationController simulationController = SimulationController.getInstance();
+        simulationController.setSelectedFile(new File("files/base.xml"));
+
     }
 
 }
