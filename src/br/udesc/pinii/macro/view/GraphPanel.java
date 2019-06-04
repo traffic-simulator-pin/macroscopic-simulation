@@ -22,7 +22,6 @@ import impl_pronta.util.ColorLib;
 import impl_pronta.visual.VisualItem;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,11 +34,11 @@ public class GraphPanel extends JPanel {
     private int[] palette2;
     private int test = 0;
 
-
     public GraphPanel(br.udesc.pinii.macro.model.Graph appGraph) {
         this.appGraph = appGraph;
 
         ControllerXML c = new ControllerXML(appGraph);
+
         c.gerarXML("grafo.xml");
 
         prefGraph = null;
@@ -79,13 +78,13 @@ public class GraphPanel extends JPanel {
 
         //Container para adição no JFrame
         Display display = new Display(visual);
-        display.setSize(800, 600);
+        display.setSize(1920, 1080);
         //Controles de movimento e zoom
         display.addControlListener(new DragControl());
         display.addControlListener(new PanControl());
         display.addControlListener(new ZoomControl());
 
-        this.add(display, BorderLayout.CENTER);//VERIFICAR
+        this.add(display);//VERIFICAR
 
         visual.run("color");
         visual.run("layout");
@@ -93,12 +92,13 @@ public class GraphPanel extends JPanel {
         ActionList repaint = new ActionList();
         repaint.add(color);
         visual.putAction("repaint", repaint);
+        System.out.println("chegou aquiiiiiiii");
+
     }
 
     public void setColors() {
         int size = appGraph.getEdges().size();
         palette2 = new int[size];
-        System.out.println("size : " + size);
         for (int i = 0; i < size; i++) {
             palette2[i] = ColorLib.rgb(0, 0, 0);
         }
@@ -109,7 +109,7 @@ public class GraphPanel extends JPanel {
             if (appGraph.getEdges().get(i).getVehiclesCount() > 1500) {
                 palette2[i] = ColorLib.rgb(255, 255 - (appGraph.getEdges().get(i).getVehiclesCount() / 58), 0);
             } else {
-                palette2[i] = ColorLib.rgb(appGraph.getEdges().get(i).getVehiclesCount() / 2, 255, 0);
+                palette2[i] = ColorLib.rgb(appGraph.getEdges().get(i).getVehiclesCount() / 5, 255, 0);
             }
         }
         visual.run("repaint");

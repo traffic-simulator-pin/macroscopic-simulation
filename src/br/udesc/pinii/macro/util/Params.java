@@ -4,9 +4,6 @@ import java.util.Random;
 
 public class Params {
 
-    public static float CAPACITY_FACTOR = 1.0f;
-    public static int NUM_EPISODES = 150;
-    public static int NUM_STEPS = 100;
     public static int STEP = 0;
     public static int EPISODE = 0;
     public static final long EXPERIMENT_ID = 1;

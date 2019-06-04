@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 public class MenuBar extends JMenuBar {
 
     private final FrameSystem frame;
-    
+
     private JMenu file;
     private JMenuItem newSimulation;
     private JMenuItem exit;
@@ -42,8 +42,8 @@ public class MenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                 FileChooser fileChooser = new FileChooser();
-                 fileChooser.setVisible(true);
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setVisible(true);
                 } catch (FileNotFoundException ex) {
                     ex.printStackTrace();
                 }
@@ -52,18 +52,19 @@ public class MenuBar extends JMenuBar {
         this.exit = new JMenuItem("Sair");
 
         this.controls = new JMenu("Controles");
-        this.pause = new JMenuItem("Pausar");
-        this.pause.setIcon(new ImageIcon("images/pause.png"));
-        this.play = new JMenuItem("Continuar");
-        this.play.setIcon(new ImageIcon("images/play.png"));
-        this.play.addActionListener((ActionEvent arg0) -> {
-            doPlay();
-        });
-        this.stop = new JMenuItem("Parar");
-        this.stop.setIcon(new ImageIcon("images/stop.png"));
 
-        this.tools = new JMenu("Ferramentas");
-        this.options = new JMenuItem("Opções");
+        this.play = new JMenuItem("Executar");
+        this.play.setIcon(new ImageIcon("images/play.png"));
+        this.play.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                doPlay();
+            }
+        });
+
+
+        this.tools = new JMenu("Opções");
+        this.options = new JMenuItem("Sobre");
 
     }
 
@@ -72,17 +73,15 @@ public class MenuBar extends JMenuBar {
         this.file.add(exit);
         super.add(file);
 
-        this.controls.add(pause);
         this.controls.add(play);
-        this.controls.add(stop);
         super.add(controls);
 
         this.tools.add(options);
         super.add(tools);
 
     }
-    
-    private void doPlay(){
+
+    private void doPlay() {
         simulationController.start();
     }
 }

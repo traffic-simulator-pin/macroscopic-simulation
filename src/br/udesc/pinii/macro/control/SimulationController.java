@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SimulationController<T extends MSA> implements ISimulationController {
+public class SimulationController<T extends MSA> extends Thread implements ISimulationController  {
 
     private List<Observer> observers;
     private Graph graph;
@@ -66,13 +66,18 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
 
     }
 
-    public void start() {
+    @Override
+    public void run() {
+        super.run();
+        this.startMSA();
+    }
+
+    public void startMSA() {
         System.out.println("iniciou");
         this.reset();
-        notifyRefreshEdges();
         Params.EG_EPSILON = Params.EG_EPSILON_DEFAULT;
 
-        while (Params.EPISODE < Params.NUM_EPISODES) {
+        while (Params.EPISODE < 150) {
             this.runEpisode();
             Params.EG_EPSILON = Params.EG_EPSILON * Params.EG_DECAYRATE;
         }
@@ -94,7 +99,7 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
             d.reset();
             d.beforeEpisode();
         }
-        while (Params.STEP < Params.NUM_STEPS) {
+        while (Params.STEP < 100) {
             if (!this.step()) {
                 break;
             }
@@ -156,7 +161,7 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
         for (Edge e : this.graph.getEdges()) {
             e.updateCost();
         }
-        System.out.println("opa");
+        System.out.println(Params.STEP);
         printLinksFlow();
 
         for (MSA driver : driversToProcess) {
@@ -201,7 +206,7 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
                         e.getAttribute("name"),
                         V.get(e.getAttribute("source")),
                         V.get(e.getAttribute("target")),
-                        stringToFloat(e.getAttribute("capacity")) * Params.CAPACITY_FACTOR,
+                        stringToFloat(e.getAttribute("capacity")) *  1.0f,
                         stringToFloat(e.getAttribute("length")),
                         isDirected("false"),
                         stringToFloat(e.getAttribute("speed")),
@@ -212,7 +217,7 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
                         e.getAttribute("target") + e.getAttribute("source"),
                         V.get(e.getAttribute("target")),
                         V.get(e.getAttribute("source")),
-                        stringToFloat(e.getAttribute("capacity")) * Params.CAPACITY_FACTOR,
+                        stringToFloat(e.getAttribute("capacity")) *  1.0f,
                         stringToFloat(e.getAttribute("length")),
                         isDirected("false"),
                         stringToFloat(e.getAttribute("speed")),
@@ -289,6 +294,10 @@ public class SimulationController<T extends MSA> implements ISimulationControlle
         Params.EG_EPSILON = Params.EG_EPSILON_DEFAULT;
         Params.STEP = 0;
         Params.EPISODE = 0;
+    }
+
+    public Graph getGraph() {
+        return graph;
     }
 
     @Override
