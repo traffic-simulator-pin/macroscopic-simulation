@@ -11,8 +11,8 @@ public class Main {
         FrameSystem frameSystem = FrameSystem.getInstance();
         frameSystem.setLocationRelativeTo(null);
         frameSystem.setVisible(true);
-        SimulationController simulationController = SimulationController.getInstance();
-        simulationController.setSelectedFile(new File("files/base.xml"));
+//        SimulationController simulationController = SimulationController.getInstance();
+//        simulationController.setSelectedFile(new File("files/base.xml"));
 //        simulationController.start();
 
     }

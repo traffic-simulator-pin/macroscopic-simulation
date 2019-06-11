@@ -36,7 +36,6 @@ public class GraphPanel extends JPanel {
 
     public GraphPanel(br.udesc.pinii.macro.model.Graph appGraph) {
         this.appGraph = appGraph;
-
         ControllerXML c = new ControllerXML(appGraph);
 
         c.gerarXML("grafo.xml");
@@ -47,7 +46,6 @@ public class GraphPanel extends JPanel {
         } catch (DataIOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         visual = new Visualization();
         visual.add("graph", prefGraph);
         LabelRenderer labelrenderer = new LabelRenderer("name");
@@ -106,7 +104,8 @@ public class GraphPanel extends JPanel {
 
     public void refreshEdges() {
         for (int i = 0; i < appGraph.getEdges().size(); i++) {
-            if (appGraph.getEdges().get(i).getVehiclesCount() > 1500) {
+            double roadSize = appGraph.getEdges().get(i).getCapacity();
+            if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 80) {
                 palette2[i] = ColorLib.rgb(255, 255 - (appGraph.getEdges().get(i).getVehiclesCount() / 58), 0);
             } else {
                 palette2[i] = ColorLib.rgb(appGraph.getEdges().get(i).getVehiclesCount() / 5, 255, 0);

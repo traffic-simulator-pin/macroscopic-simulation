@@ -50,6 +50,12 @@ public class MenuBar extends JMenuBar {
             }
         });
         this.exit = new JMenuItem("Sair");
+        this.exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });
 
         this.controls = new JMenu("Controles");
 
@@ -59,6 +65,7 @@ public class MenuBar extends JMenuBar {
             @Override
             public void actionPerformed(ActionEvent e) {
                 doPlay();
+
             }
         });
 
@@ -83,5 +90,7 @@ public class MenuBar extends JMenuBar {
 
     private void doPlay() {
         simulationController.start();
+        StatisticFrame statisticFrame = new StatisticFrame();
+        statisticFrame.setVisible(true);
     }
 }

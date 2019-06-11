@@ -161,7 +161,6 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
         for (Edge e : this.graph.getEdges()) {
             e.updateCost();
         }
-        System.out.println(Params.STEP);
         printLinksFlow();
 
         for (MSA driver : driversToProcess) {
@@ -214,7 +213,7 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
                         stringToFloat(e.getAttribute("constantB"))
                 ));
                 E.put(e.getAttribute("target") + e.getAttribute("source"), new Edge(
-                        e.getAttribute("target") + e.getAttribute("source"),
+                        e.getAttribute("target") +"-"+ e.getAttribute("source"),
                         V.get(e.getAttribute("target")),
                         V.get(e.getAttribute("source")),
                         stringToFloat(e.getAttribute("capacity")) *  1.0f,
@@ -313,4 +312,19 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
     }
 
 
+    public String getNodos(int rowIndex) {
+        return this.getGraph().getEdges().get(rowIndex).getId();
+    }
+
+    public int getVehicles(int rowIndex) {
+        return this.getGraph().getEdges().get(rowIndex).getVehiclesCount();
+    }
+
+    public float getCapacity(int rowIndex) {
+        return this.getGraph().getEdges().get(rowIndex).getCapacity();
+    }
+
+    public int getType(int rowIndex) {
+        return this.getGraph().getEdges().get(rowIndex).getTotalFlow();
+    }
 }

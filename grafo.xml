@@ -11,12 +11,32 @@
 <node id="2"> <data key="name">2</data> <data key="conj">A</data> </node>
 <node id="3"> <data key="name">3</data> <data key="conj">A</data> </node>
 <node id="4"> <data key="name">4</data> <data key="conj">A</data> </node>
+<node id="5"> <data key="name">5</data> <data key="conj">A</data> </node>
+<node id="6"> <data key="name">6</data> <data key="conj">A</data> </node>
+<node id="7"> <data key="name">7</data> <data key="conj">A</data> </node>
+<node id="8"> <data key="name">8</data> <data key="conj">A</data> </node>
+<node id="9"> <data key="name">9</data> <data key="conj">A</data> </node>
+<node id="10"> <data key="name">10</data> <data key="conj">A</data> </node>
+<edge source="6" target="7"> <data key="id">6-7</data> </edge> 
+<edge source="4" target="9"> <data key="id">4-9</data> </edge> 
+<edge source="7" target="8"> <data key="id">7-8</data> </edge> 
+<edge source="9" target="10"> <data key="id">9-10</data> </edge> 
+<edge source="1" target="2"> <data key="id">1-2</data> </edge> 
 <edge source="2" target="3"> <data key="id">2-3</data> </edge> 
 <edge source="3" target="4"> <data key="id">3-4</data> </edge> 
-<edge source="1" target="2"> <data key="id">1-2</data> </edge> 
-<edge source="2" target="1"> <data key="id">21</data> </edge> 
-<edge source="3" target="2"> <data key="id">32</data> </edge> 
-<edge source="4" target="3"> <data key="id">43</data> </edge> 
+<edge source="10" target="9"> <data key="id">10-9</data> </edge> 
+<edge source="9" target="4"> <data key="id">9-4</data> </edge> 
+<edge source="4" target="5"> <data key="id">4-5</data> </edge> 
+<edge source="3" target="6"> <data key="id">3-6</data> </edge> 
+<edge source="6" target="3"> <data key="id">6-3</data> </edge> 
+<edge source="5" target="6"> <data key="id">5-6</data> </edge> 
+<edge source="2" target="1"> <data key="id">2-1</data> </edge> 
+<edge source="3" target="2"> <data key="id">3-2</data> </edge> 
+<edge source="4" target="3"> <data key="id">4-3</data> </edge> 
+<edge source="5" target="4"> <data key="id">5-4</data> </edge> 
+<edge source="6" target="5"> <data key="id">6-5</data> </edge> 
+<edge source="7" target="6"> <data key="id">7-6</data> </edge> 
+<edge source="8" target="7"> <data key="id">8-7</data> </edge> 
 
 </graph>
 </graphml>

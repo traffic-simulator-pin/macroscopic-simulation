@@ -3,6 +3,7 @@ package br.udesc.pinii.macro.view;
 import br.udesc.pinii.macro.control.SimulationController;
 import br.udesc.pinii.macro.model.Graph;
 import br.udesc.pinii.macro.model.MSA;
+import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 import java.io.File;
@@ -23,6 +24,7 @@ public class FileChooser extends JFileChooser {
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = super.getSelectedFile();
+            JOptionPane.showMessageDialog(null, "Aguarde a leitura do XML");
             simulationController.setSelectedFile(selectedFile);
         }
     }
