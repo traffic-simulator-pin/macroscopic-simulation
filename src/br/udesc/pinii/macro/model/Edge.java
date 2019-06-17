@@ -7,6 +7,7 @@ public class Edge implements Comparable<Edge> {
 
     private String id;
     private boolean undirected;
+    private boolean directed;
     private Node source;
     private Node target;
     private float capacity;
@@ -17,6 +18,7 @@ public class Edge implements Comparable<Edge> {
     private int vehiclesCount;
     private float msaFlow;
     private double cost;
+    private boolean show;
 
     public String getId() {
         return id;
@@ -27,9 +29,10 @@ public class Edge implements Comparable<Edge> {
     }
 
     public Edge(String id, Node source, Node target, float capacity, float length, boolean directed,
-                float freeflow, float constantA, float constantB) {
+                float freeflow, float constantA, float constantB, boolean show) {
         this.id = id;
-        this.undirected = !directed;
+        this.undirected = false;
+        this.directed = directed;
 
         this.source = source;
         this.source.addOutEdge(this);
@@ -47,6 +50,8 @@ public class Edge implements Comparable<Edge> {
         this.totalFlow = 0;
         this.msaFlow = 0;
 
+        this.show = show;
+
         this.capacity = capacity;
         this.cost = length;
         this.freeFlowCost = freeflow;
@@ -59,6 +64,10 @@ public class Edge implements Comparable<Edge> {
         this.cost = this.getFreeFlowCost() * (1 + this.getConstantA() * Math.pow(this.getVehiclesCount() / this.getCapacity(), getConstantB()));
     }
 
+    public boolean isShow() {
+        return show;
+    }
+
     public float getAcumulatedCost() {
         return (float) (this.cost = this.getFreeFlowCost() * (1 + this.getConstantA() * Math.pow(this.getTotalFlow() / this.getCapacity(), getConstantB())));
     }
@@ -66,6 +75,10 @@ public class Edge implements Comparable<Edge> {
     public void incVehiclesHere() {
         this.vehiclesCount++;
         this.totalFlow++;
+    }
+
+    public boolean isDirected() {
+        return directed;
     }
 
     public void clearVehiclesHere() {

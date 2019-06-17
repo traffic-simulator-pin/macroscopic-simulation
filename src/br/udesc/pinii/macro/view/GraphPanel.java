@@ -56,11 +56,8 @@ public class GraphPanel extends JPanel {
         DataColorAction fill = new DataColorAction("graph.nodes", "conj", Constants.NOMINAL, VisualItem.FILLCOLOR, palette1);
         ColorAction text = new ColorAction("graph.nodes", VisualItem.TEXTCOLOR, ColorLib.gray(0));
 
-//        palette2 = new int[]{ColorLib.rgb(200, 200, 200), ColorLib.rgb(0, 140, 0), ColorLib.rgb(220, 0, 0), ColorLib.rgb(0, 0, 200)};
         setColors();
         DataColorAction edges = new DataColorAction("graph.edges", "id", 0, VisualItem.STROKECOLOR, palette2);
-        //ColorAction edges = new ColorAction("graph.edges", VisualItem.STROKECOLOR, ColorLib.gray(200));
-        //ColorAction edges2 = new ColorAction("graph.edges", new  BooleanLiteral(false), VisualItem.STROKECOLOR, ColorLib.rgb(200, 0, 0));
 
         ActionList color = new ActionList();
         color.add(fill);
@@ -74,15 +71,13 @@ public class GraphPanel extends JPanel {
         visual.putAction("color", color);
         visual.putAction("layout", layout);
 
-        //Container para adição no JFrame
         Display display = new Display(visual);
         display.setSize(1920, 1080);
-        //Controles de movimento e zoom
         display.addControlListener(new DragControl());
         display.addControlListener(new PanControl());
         display.addControlListener(new ZoomControl());
 
-        this.add(display);//VERIFICAR
+        this.add(display);
 
         visual.run("color");
         visual.run("layout");
@@ -90,7 +85,6 @@ public class GraphPanel extends JPanel {
         ActionList repaint = new ActionList();
         repaint.add(color);
         visual.putAction("repaint", repaint);
-        System.out.println("chegou aquiiiiiiii");
 
     }
 
@@ -105,10 +99,17 @@ public class GraphPanel extends JPanel {
     public void refreshEdges() {
         for (int i = 0; i < appGraph.getEdges().size(); i++) {
             double roadSize = appGraph.getEdges().get(i).getCapacity();
-            if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 80) {
-                palette2[i] = ColorLib.rgb(255, 255 - (appGraph.getEdges().get(i).getVehiclesCount() / 58), 0);
-            } else {
-                palette2[i] = ColorLib.rgb(appGraph.getEdges().get(i).getVehiclesCount() / 5, 255, 0);
+            System.out.println(appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize);
+            if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 100) {
+                palette2[i] = ColorLib.rgb(255, 0, 0);
+            } else if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 80) {
+                palette2[i] = ColorLib.rgb(254, 111, 0);
+            } else if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 50) {
+                palette2[i] = ColorLib.rgb(254, 212, 0);
+            } else if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 20) {
+                palette2[i] = ColorLib.rgb(76, 255, 0);
+            } else if (appGraph.getEdges().get(i).getVehiclesCount() == 0) {
+                palette2[i] = ColorLib.rgb(0, 0, 0);
             }
         }
         visual.run("repaint");

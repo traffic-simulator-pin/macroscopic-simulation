@@ -1,12 +1,8 @@
 package br.udesc.pinii.macro.control;
 
-import br.udesc.pinii.macro.model.Edge;
 import br.udesc.pinii.macro.model.Graph;
-import br.udesc.pinii.macro.model.Node;
-import java.util.List;
 
 /**
- *
  * @author José Carlos
  */
 public class ControllerXML {

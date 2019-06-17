@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SimulationController<T extends MSA> extends Thread implements ISimulationController  {
+public class SimulationController<T extends MSA> extends Thread implements ISimulationController {
 
     private List<Observer> observers;
     private Graph graph;
@@ -35,6 +35,8 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
     private final CompletionService<Object> cservice = new ExecutorCompletionService<>(eservice);
     private File selectedFile;
     private static SimulationController instance;
+
+    private HashMap<String, Edge> newEdges;
 
     public static SimulationController getInstance() {
         if (instance == null)
@@ -45,21 +47,17 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
 
     private SimulationController() {
         this.observers = new ArrayList<>();
+        this.newEdges = new HashMap<>();
     }
 
 
-    public void setDrivers(List<T> drivers) {
-        this.drivers = drivers;
-    }
-
+    @Override
     public void setSelectedFile(File file) {
         this.selectedFile = file;
         this.graph = processGraph(file);
         try {
             this.drivers = processODMatrix(graph, file, 1.0f, MSA.class);
             FrameSystem.getInstance().initNewGraph(graph);
-            //problema é aqui
-//            start();
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -72,13 +70,14 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
         this.startMSA();
     }
 
+    @Override
     public void startMSA() {
         System.out.println("iniciou");
         this.reset();
         Params.EG_EPSILON = Params.EG_EPSILON_DEFAULT;
 
         while (Params.EPISODE < 150) {
-            this.runEpisode();
+            this.runSteps();
             Params.EG_EPSILON = Params.EG_EPSILON * Params.EG_DECAYRATE;
         }
 
@@ -89,7 +88,8 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
         this.eservice.shutdown();
     }
 
-    private boolean runEpisode() {
+    @Override
+    public boolean runSteps() {
         Params.EPISODE++;
         Params.STEP = 0;
 
@@ -115,7 +115,8 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
         return true;
     }
 
-    private boolean step() {
+    @Override
+    public boolean step() {
         boolean finished = true;
         List<MSA> driversToProcess = new LinkedList<>();
         for (T d : this.drivers) {
@@ -180,6 +181,7 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
         return true;
     }
 
+    @Override
     public Graph processGraph(File netFile) {
         HashMap<String, Node> V = null;
         HashMap<String, Edge> E = null;
@@ -201,35 +203,40 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
             E = new HashMap<>(list.getLength());
             for (int i = 0; i < list.getLength(); i++) {
                 Element e = (Element) list.item(i);
+                boolean show = isDirected(e.getAttribute("oneway"));
                 E.put(e.getAttribute("name"), new Edge(
                         e.getAttribute("name"),
                         V.get(e.getAttribute("source")),
                         V.get(e.getAttribute("target")),
-                        stringToFloat(e.getAttribute("capacity")) *  1.0f,
+                        stringToFloat(e.getAttribute("capacity")) * 1.0f,
                         stringToFloat(e.getAttribute("length")),
-                        isDirected("false"),
+                        isDirected(e.getAttribute("oneway")),
                         stringToFloat(e.getAttribute("speed")),
                         stringToFloat(e.getAttribute("constantA")),
-                        stringToFloat(e.getAttribute("constantB"))
+                        stringToFloat(e.getAttribute("constantB")),
+                        show
                 ));
                 E.put(e.getAttribute("target") + e.getAttribute("source"), new Edge(
-                        e.getAttribute("target") +"-"+ e.getAttribute("source"),
+                        e.getAttribute("target") + "-" + e.getAttribute("source"),
                         V.get(e.getAttribute("target")),
                         V.get(e.getAttribute("source")),
-                        stringToFloat(e.getAttribute("capacity")) *  1.0f,
+                        stringToFloat(e.getAttribute("capacity")) * 1.0f,
                         stringToFloat(e.getAttribute("length")),
                         isDirected("false"),
                         stringToFloat(e.getAttribute("speed")),
                         stringToFloat(e.getAttribute("constantA")),
-                        stringToFloat(e.getAttribute("constantB"))
+                        stringToFloat(e.getAttribute("constantB")),
+                        !show
                 ));
             }
+
         } catch (IOException | NumberFormatException | ParserConfigurationException | SAXException e) {
             System.err.println("Error on reading XML file!");
         }
         return new Graph(V, E);
     }
 
+    @Override
     public <T> List<T> processODMatrix(Graph G, File odFile, float demand_factor, Class<br.udesc.pinii.macro.model.MSA> clazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         List<T> drivers = new ArrayList<>();
         System.out.println("Aguarde a criação da matriz od...");
@@ -239,7 +246,7 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(odFile);
 
-            NodeList list = doc.getElementsByTagName("od");
+            NodeList list = doc.getElementsByTagName("conection");
 
             int countD = 0;
 
@@ -249,7 +256,7 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
                 Node destination = G.getNodes(e.getAttribute("target"));
                 System.out.print(origin + "-");
                 System.out.println(destination);
-                int size = (int) (Integer.parseInt(e.getAttribute("trips")) * demand_factor);
+                int size = (int) (Integer.parseInt(e.getAttribute("flow")) * demand_factor);
                 for (int d = size; d > 0; d--) {
                     Object driver = clazz.getConstructor(clazz.getConstructors()[0].getParameterTypes()).newInstance(++countD, origin, destination, G);
                     drivers.add((T) driver);
@@ -257,7 +264,11 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
                 }
             }
             Params.DEMAND_SIZE = countD;
-
+            for (Edge edge : graph.getEdges()) {
+                if (edge.isShow()) {
+                    newEdges.put(edge.getId(), edge);
+                }
+            }
             System.out.println("sucesso ao gerar matriz OD");
         } catch (IOException | NumberFormatException | ParserConfigurationException | SAXException e) {
             System.err.println("Error on reading XML file!");
@@ -274,9 +285,10 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
     }
 
     private static boolean isDirected(String value) {
-        return value.equalsIgnoreCase("true");
+        return value.equalsIgnoreCase(value);
     }
 
+    @Override
     public void printLinksFlow() {
         List<Edge> list = this.graph.getEdges();
         Collections.sort(list);
@@ -289,15 +301,13 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
     }
 
 
-    private void reset() {
+    @Override
+    public void reset() {
         Params.EG_EPSILON = Params.EG_EPSILON_DEFAULT;
         Params.STEP = 0;
         Params.EPISODE = 0;
     }
 
-    public Graph getGraph() {
-        return graph;
-    }
 
     @Override
     public void addObserver(Observer observer) {
@@ -311,20 +321,28 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
         }
     }
 
+    @Override
+    public int size() {
+        return newEdges.size();
+    }
 
+    @Override
     public String getNodos(int rowIndex) {
-        return this.getGraph().getEdges().get(rowIndex).getId();
+        return graph.getEdges().get(rowIndex).getId();
     }
 
+    @Override
     public int getVehicles(int rowIndex) {
-        return this.getGraph().getEdges().get(rowIndex).getVehiclesCount();
+        return graph.getEdges().get(rowIndex).getVehiclesCount();
     }
 
+    @Override
     public float getCapacity(int rowIndex) {
-        return this.getGraph().getEdges().get(rowIndex).getCapacity();
+        return graph.getEdges().get(rowIndex).getCapacity();
     }
 
-    public int getType(int rowIndex) {
-        return this.getGraph().getEdges().get(rowIndex).getTotalFlow();
+    @Override
+    public float getType(int rowIndex) {
+        return graph.getEdges().get(rowIndex).getAcumulatedCost();
     }
 }

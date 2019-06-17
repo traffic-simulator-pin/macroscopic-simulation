@@ -62,7 +62,7 @@ public class StatisticFrame extends JFrame implements Observer {
 
         @Override
         public int getRowCount() {
-            return simulationController.getGraph().getEdges().size();
+            return simulationController.size();
         }
 
         @Override
@@ -108,7 +108,7 @@ public class StatisticFrame extends JFrame implements Observer {
                                                        int row, int col) {
 
             JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
-            if (row == simulationController.getGraph().getEdges().size()) {
+            if (row == simulationController.size()) {
                 l.setFont(new Font(l.getFont().getFontName(), Font.BOLD, l.getFont().getSize()));
             }
             return l;

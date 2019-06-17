@@ -24,7 +24,6 @@ public class FileChooser extends JFileChooser {
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = super.getSelectedFile();
-            JOptionPane.showMessageDialog(null, "Aguarde a leitura do XML");
             simulationController.setSelectedFile(selectedFile);
         }
     }
