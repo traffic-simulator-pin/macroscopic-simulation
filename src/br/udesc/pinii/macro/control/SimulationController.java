@@ -1,10 +1,7 @@
 package br.udesc.pinii.macro.control;
 
 import br.udesc.pinii.macro.control.observer.Observer;
-import br.udesc.pinii.macro.model.Edge;
-import br.udesc.pinii.macro.model.Graph;
-import br.udesc.pinii.macro.model.MSA;
-import br.udesc.pinii.macro.model.Node;
+import br.udesc.pinii.macro.model.*;
 import br.udesc.pinii.macro.util.Params;
 import br.udesc.pinii.macro.view.FrameSystem;
 import org.w3c.dom.Document;
@@ -35,7 +32,8 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
     private final CompletionService<Object> cservice = new ExecutorCompletionService<>(eservice);
     private File selectedFile;
     private static SimulationController instance;
-
+    private List<StatisticEdge> statisticEdges;
+    private Object[] keys;
     private HashMap<String, Edge> newEdges;
 
     public static SimulationController getInstance() {
@@ -48,6 +46,7 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
     private SimulationController() {
         this.observers = new ArrayList<>();
         this.newEdges = new HashMap<>();
+        this.statisticEdges = new ArrayList<>();
     }
 
 
@@ -266,9 +265,11 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
             Params.DEMAND_SIZE = countD;
             for (Edge edge : graph.getEdges()) {
                 if (edge.isShow()) {
-                    newEdges.put(edge.getId(), edge);
+                    this.newEdges.put(edge.getId(), edge);
+                    this.statisticEdges.add(new StatisticEdge(edge.getId()));
                 }
             }
+            keys = newEdges.keySet().toArray();
             System.out.println("sucesso ao gerar matriz OD");
         } catch (IOException | NumberFormatException | ParserConfigurationException | SAXException e) {
             System.err.println("Error on reading XML file!");
@@ -308,7 +309,6 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
         Params.EPISODE = 0;
     }
 
-
     @Override
     public void addObserver(Observer observer) {
         this.observers.add(observer);
@@ -328,21 +328,44 @@ public class SimulationController<T extends MSA> extends Thread implements ISimu
 
     @Override
     public String getNodos(int rowIndex) {
-        return graph.getEdges().get(rowIndex).getId();
+        return newEdges.get(keys[rowIndex]).getId();
     }
 
     @Override
     public int getVehicles(int rowIndex) {
-        return graph.getEdges().get(rowIndex).getVehiclesCount();
+        return newEdges.get(keys[rowIndex]).getVehiclesCount();
     }
 
     @Override
     public float getCapacity(int rowIndex) {
-        return graph.getEdges().get(rowIndex).getCapacity();
+        return newEdges.get(keys[rowIndex]).getCapacity();
     }
 
     @Override
     public float getType(int rowIndex) {
-        return graph.getEdges().get(rowIndex).getAcumulatedCost();
+        return newEdges.get(keys[rowIndex]).getTotalFlow();
+    }
+
+    @Override
+    public void updateScore(int i, int i1) {
+        if (i < newEdges.size())
+            statisticEdges.get(i).incScore(i1);
+
+        Collections.sort(statisticEdges);
+    }
+
+    public Edge getEdge(int i){
+        return newEdges.get(keys[i]);
+    }
+
+
+    @Override
+    public String getScoreNodes(int rowIndex) {
+        return statisticEdges.get(rowIndex).getId();
+    }
+
+    @Override
+    public int getScoreValue(int rowIndex) {
+        return statisticEdges.get(rowIndex).getScore();
     }
 }

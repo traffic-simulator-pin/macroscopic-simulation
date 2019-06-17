@@ -8,14 +8,13 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
-public class StatisticFrame extends JFrame implements Observer {
-
+public class ScoreFrame extends JFrame implements Observer {
     private SimulationController simulationController;
     private ItensTableModel itModel;
     private JTable jtItens;
 
-    public StatisticFrame() {
-        setTitle("Dados");
+    public ScoreFrame() {
+        setTitle("Ranking de rotas");
         setSize(400, 300);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -48,7 +47,7 @@ public class StatisticFrame extends JFrame implements Observer {
 
         @Override
         public int getColumnCount() {
-            return 4;
+            return 2;
         }
 
         @Override
@@ -70,13 +69,9 @@ public class StatisticFrame extends JFrame implements Observer {
 
             switch (colIndex) {
                 case 0:
-                    return simulationController.getNodos(rowIndex);
-                case 1:
-                    return simulationController.getVehicles(rowIndex);
-                case 2:
-                    return simulationController.getCapacity(rowIndex);
+                    return simulationController.getScoreNodes(rowIndex);
                 default:
-                    return simulationController.getType(rowIndex);
+                    return simulationController.getScoreValue(rowIndex);
             }
 
         }
@@ -86,13 +81,10 @@ public class StatisticFrame extends JFrame implements Observer {
             switch (column) {
                 case 0:
                     return "Nodos";
-                case 1:
-                    return "Veículos";
-                case 2:
-                    return "Capacidade";
                 default:
-                    return "Fluxo";
+                    return "Pontuação";
             }
+
         }
 
     }
@@ -115,5 +107,3 @@ public class StatisticFrame extends JFrame implements Observer {
         }
     }
 }
-
-

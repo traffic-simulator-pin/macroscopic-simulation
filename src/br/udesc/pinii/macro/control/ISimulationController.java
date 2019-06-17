@@ -39,4 +39,9 @@ public interface ISimulationController {
 
     float getType(int rowIndex);
 
+    void updateScore(int i, int i1);
+
+    String getScoreNodes(int rowIndex);
+
+    int getScoreValue(int rowIndex);
 }

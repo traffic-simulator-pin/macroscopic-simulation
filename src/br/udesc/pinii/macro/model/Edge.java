@@ -68,9 +68,6 @@ public class Edge implements Comparable<Edge> {
         return show;
     }
 
-    public float getAcumulatedCost() {
-        return (float) (this.cost = this.getFreeFlowCost() * (1 + this.getConstantA() * Math.pow(this.getTotalFlow() / this.getCapacity(), getConstantB())));
-    }
 
     public void incVehiclesHere() {
         this.vehiclesCount++;

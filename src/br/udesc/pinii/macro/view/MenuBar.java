@@ -91,6 +91,8 @@ public class MenuBar extends JMenuBar {
     private void doPlay() {
         simulationController.start();
         StatisticFrame statisticFrame = new StatisticFrame();
+        ScoreFrame scoreFrame = new ScoreFrame();
+        scoreFrame.setVisible(true);
         statisticFrame.setVisible(true);
     }
 }

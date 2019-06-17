@@ -1,8 +1,10 @@
 package br.udesc.pinii.macro.view;
 
 import br.udesc.pinii.macro.control.ControllerXML;
+import br.udesc.pinii.macro.control.SimulationController;
 import br.udesc.pinii.macro.model.Edge;
 import br.udesc.pinii.macro.model.Node;
+import br.udesc.pinii.macro.model.StatisticEdge;
 import impl_pronta.*;
 import impl_pronta.action.ActionList;
 import impl_pronta.action.RepaintAction;
@@ -22,6 +24,8 @@ import impl_pronta.util.ColorLib;
 import impl_pronta.visual.VisualItem;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +36,7 @@ public class GraphPanel extends JPanel {
     private br.udesc.pinii.macro.model.Graph appGraph;
     private Visualization visual;
     private int[] palette2;
-    private int test = 0;
+    private SimulationController simulationController;
 
     public GraphPanel(br.udesc.pinii.macro.model.Graph appGraph) {
         this.appGraph = appGraph;
@@ -48,6 +52,7 @@ public class GraphPanel extends JPanel {
         }
         visual = new Visualization();
         visual.add("graph", prefGraph);
+        simulationController = SimulationController.getInstance();
         LabelRenderer labelrenderer = new LabelRenderer("name");
         labelrenderer.setRoundedCorner(8, 8);
         visual.setRendererFactory(new DefaultRendererFactory(labelrenderer));
@@ -99,16 +104,20 @@ public class GraphPanel extends JPanel {
     public void refreshEdges() {
         for (int i = 0; i < appGraph.getEdges().size(); i++) {
             double roadSize = appGraph.getEdges().get(i).getCapacity();
-            System.out.println(appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize);
             if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 100) {
+                simulationController.updateScore(i, 4);
                 palette2[i] = ColorLib.rgb(255, 0, 0);
             } else if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 80) {
+                simulationController.updateScore(i, 3);
                 palette2[i] = ColorLib.rgb(254, 111, 0);
             } else if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 50) {
+                simulationController.updateScore(i, 2);
                 palette2[i] = ColorLib.rgb(254, 212, 0);
             } else if (appGraph.getEdges().get(i).getVehiclesCount() * 100 / roadSize > 20) {
+                simulationController.updateScore(i, 1);
                 palette2[i] = ColorLib.rgb(76, 255, 0);
             } else if (appGraph.getEdges().get(i).getVehiclesCount() == 0) {
+                simulationController.updateScore(i, 0);
                 palette2[i] = ColorLib.rgb(0, 0, 0);
             }
         }
