@@ -32,7 +32,7 @@ public class FrameSystem extends JFrame implements Observer {
     private FrameSystem() {
         setTitle("Simulação Macroscópica");
         setSize(new Dimension(900, 600));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         simulationController = SimulationController.getInstance();
         simulationController.addObserver(this);
         initializeComponents();

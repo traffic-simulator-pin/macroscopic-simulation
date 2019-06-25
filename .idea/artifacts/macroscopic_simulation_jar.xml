@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="macroscopic-simulation:jar">
+    <output-path>$PROJECT_DIR$/../..</output-path>
+    <root id="archive" name="macroscopic-simulation.jar">
+      <element id="module-output" name="macroscopic-simulation" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/graph-api.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
